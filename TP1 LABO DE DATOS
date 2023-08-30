@@ -1,0 +1,105 @@
+import csv
+import math
+
+nombre_archivo = "arbolado-en-espacios-verdes.csv"
+
+##EJ1
+def leer_parques(nombre_archivo, parque):
+    res = []
+    with open(nombre_archivo, "rt", encoding="utf-8") as f:
+        filas = csv.reader(f)
+        encabezado = next(filas)
+        for fila in filas:
+            if(parque == fila[10]):
+                res.append(dict(zip(encabezado,fila)))
+    return res
+
+#print(leer_parques(nombre_archivo, "GENERAL PAZ"))
+
+##EJ2
+def especies(lista_arboles):
+    res = []
+    for i in lista_arboles:
+        res.append(i["nombre_com"])
+    return set(res)
+
+#print(especies(leer_parques(nombre_archivo, "GENERAL PAZ")))
+
+##EJ3
+def contar_ejemplares(lista_arboles):
+    contador = {}  
+    for arbol in lista_arboles:
+        especie = arbol['nombre_com']  
+        if especie in contador:
+            contador[especie] += 1  
+        else:
+            contador[especie] = 1   
+    return contador
+
+#print(contar_ejemplares(leer_parques(nombre_archivo, "CENTENARIO")))
+
+##EJ4
+def obtener_alturas(lista_arboles, especie):
+    alturas = []
+    for arbol in lista_arboles:
+        if arbol["nombre_com"] == especie:
+            alturas.append(float(arbol["altura_tot"]))
+    return alturas
+
+#print(obtener_alturas(leer_parques(nombre_archivo, "GENERAL PAZ"), "Ombú"))
+
+def calcular_promedio(lista):
+    return sum(lista) / len(lista) if len(lista) > 0 else 0
+
+def calcular_maxima(lista):
+    return max(lista) if len(lista) > 0 else 0
+
+# print(calcular_promedio(obtener_alturas(leer_parques(nombre_archivo, "GENERAL PAZ"), "Jacarandá")))
+
+# print(calcular_maxima(obtener_alturas(leer_parques(nombre_archivo, "GENERAL PAZ"), "Jacarandá")))
+
+##EJ5
+def obtener_inclinaciones(lista_arboles, especie):
+    inclinaciones = []
+    for arbol in lista_arboles:
+        if arbol["nombre_com"] == especie:
+            inclinaciones.append(float(arbol["inclinacio"]))
+    return inclinaciones
+
+#print(obtener_inclinaciones(leer_parques(nombre_archivo, "GENERAL PAZ"), "Ombú"))
+
+##EJ6
+def especimen_mas_inclinado(lista_arboles):
+    especies_lista = especies(lista_arboles)
+    especie_mas_inclinada = None
+    max_inclinacion = -1
+    
+    for especie in especies_lista:
+        inclinaciones = obtener_inclinaciones(lista_arboles, especie)
+        if inclinaciones:
+            max_inclinacion_especie = max(inclinaciones)
+            if max_inclinacion_especie > max_inclinacion:
+                max_inclinacion = max_inclinacion_especie
+                especie_mas_inclinada = especie
+    
+    return especie_mas_inclinada, max_inclinacion
+
+#print(especimen_mas_inclinado(leer_parques(nombre_archivo, "CENTENARIO")))
+
+##EJ7
+def especimen_promedio_mas_inclinada(lista_arboles):
+    especies_lista = especies(lista_arboles)
+    especie_promedio_mas_inclinada = None
+    max_promedio_inclinacion = -1
+    
+    for especie in especies_lista:
+        inclinaciones = obtener_inclinaciones(lista_arboles, especie)
+        if inclinaciones:
+            promedio_inclinacion_especie = sum(inclinaciones) / len(inclinaciones)
+            if promedio_inclinacion_especie > max_promedio_inclinacion:
+                max_promedio_inclinacion = promedio_inclinacion_especie
+                especie_promedio_mas_inclinada = especie
+    
+    return especie_promedio_mas_inclinada, max_promedio_inclinacion
+
+print(especimen_promedio_mas_inclinada(leer_parques(nombre_archivo, "Parque Los Andes")))
